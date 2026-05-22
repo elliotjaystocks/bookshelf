@@ -26,6 +26,12 @@
 - cover: https://covers.openlibrary.org/b/id/13198770-M.jpg
 - isbn: 1250807344
 
+### Things Become Other Things
+- id: 1779445668520
+- author: Craig Mod
+- cover: https://covers.openlibrary.org/b/id/15136999-M.jpg
+- isbn: 0593732545
+
 ## to-read-bought
 
 ## to-read-someday
