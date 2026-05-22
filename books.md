@@ -28,6 +28,12 @@
 
 ## to-read-bought
 
+### Wuthering Heights
+- id: 1779445996914
+- author: Emily Brontë
+- cover: https://covers.openlibrary.org/b/id/12818862-M.jpg
+- isbn: 9783458141068
+
 ## to-read-someday
 
 ## archive-finished
