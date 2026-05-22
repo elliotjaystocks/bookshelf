@@ -14,6 +14,12 @@
 - cover: https://covers.openlibrary.org/b/id/843879-M.jpg
 - isbn: 1408820854
 
+### Bowling with Corpses and Other Strange Tales from Lands Unknown
+- id: 1779445596722
+- author: Mike Mignola
+- cover: https://covers.openlibrary.org/b/id/15177798-M.jpg
+- isbn: 1506745881
+
 ## to-read-bought
 
 ## to-read-someday
