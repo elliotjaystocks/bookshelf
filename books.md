@@ -20,6 +20,12 @@
 - cover: https://covers.openlibrary.org/b/id/15177798-M.jpg
 - isbn: 1506745881
 
+### Drunk on All Your Strange New Words
+- id: 1779445653225
+- author: Eddie Robson
+- cover: https://covers.openlibrary.org/b/id/13198770-M.jpg
+- isbn: 1250807344
+
 ## to-read-bought
 
 ## to-read-someday
