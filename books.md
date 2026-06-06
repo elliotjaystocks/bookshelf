@@ -8,12 +8,6 @@
 - cover: https://covers.openlibrary.org/b/id/14625703-M.jpg
 - isbn: 9780760383384
 
-### Kitchen Confidential
-- id: 1779445582861
-- author: Anthony Bourdain
-- cover: https://covers.openlibrary.org/b/id/843879-M.jpg
-- isbn: 1408820854
-
 ### Bowling with Corpses and Other Strange Tales from Lands Unknown
 - id: 1779445596722
 - author: Mike Mignola
@@ -45,4 +39,10 @@
 - isbn: 0593732545
 
 ## archive-abandoned
+
+### Kitchen Confidential
+- id: 1779445582861
+- author: Anthony Bourdain
+- cover: https://covers.openlibrary.org/b/id/843879-M.jpg
+- isbn: 1408820854
 
