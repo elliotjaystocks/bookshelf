@@ -20,6 +20,12 @@
 - cover: https://covers.openlibrary.org/b/id/13198770-M.jpg
 - isbn: 1250807344
 
+### Kitchen Confidential
+- id: 1779445582861
+- author: Anthony Bourdain
+- cover: https://covers.openlibrary.org/b/id/843879-M.jpg
+- isbn: 1408820854
+
 ## to-read-bought
 
 ### Wuthering Heights
@@ -39,10 +45,4 @@
 - isbn: 0593732545
 
 ## archive-abandoned
-
-### Kitchen Confidential
-- id: 1779445582861
-- author: Anthony Bourdain
-- cover: https://covers.openlibrary.org/b/id/843879-M.jpg
-- isbn: 1408820854
 
