@@ -12,9 +12,9 @@
   // =============================================================
 
   var LISTS = {
-    'currently-reading': 'Currently Reading',
-    'to-read-bought':    'Bought & Ready to Read',
-    'to-read-someday':   'Want to Read Someday',
+    'currently-reading': 'Currently reading',
+    'to-read-bought':    'Bought & ready to read',
+    'to-read-someday':   'Want to read someday',
     'archive-finished':  'Finished',
     'archive-abandoned': 'Abandoned',
   };
@@ -360,7 +360,9 @@
 
   function hideLoading() {
     var el = document.getElementById('page-loading');
-    if (el) el.classList.add('hidden');
+    if (!el) return;
+    el.classList.add('hidden');
+    setTimeout(function () { el.hidden = true; }, 320);
   }
 
   // =============================================================
@@ -577,7 +579,7 @@
         '</div>',
         '<div class="modal-body">',
           '<p class="settings-intro">',
-            'Bookshelf saves your reading list to a <code>books.md</code> file in a GitHub ',
+            'Elliot’s bookshelf saves your reading list to a <code>books.md</code> file in a GitHub',
             'repository of your choice. You\u2019ll need a personal access token so the app ',
             'can read and write that file on your behalf.<br><br>',
             '<strong>To create a token:</strong> go to ',
@@ -774,7 +776,6 @@
       var books   = db['currently-reading'];
       var grid    = document.getElementById('book-grid');
       var empty   = document.getElementById('empty-state');
-      var count   = document.getElementById('book-count');
 
       if (books.length === 0) {
         if (grid)  grid.hidden  = true;
@@ -789,8 +790,7 @@
           if (emptyBtn) emptyBtn.addEventListener('click', function () { openSearchModal('currently-reading'); });
         }
       } else {
-        if (count) count.textContent = books.length + ' book' + (books.length === 1 ? '' : 's');
-        if (grid)  grid.innerHTML    = books.map(function (b) { return renderBookCard(b, 'currently-reading'); }).join('');
+        if (grid) grid.innerHTML = books.map(function (b) { return renderBookCard(b, 'currently-reading'); }).join('');
       }
     }).catch(function (err) {
       console.error(err);
@@ -805,7 +805,7 @@
 
   function initToRead() {
     var tabs = [
-      { listId: 'to-read-bought',  panelId: 'panel-bought',  label: 'Bought & Ready'       },
+      { listId: 'to-read-bought',  panelId: 'panel-bought',  label: 'Bought & ready to read' },
       { listId: 'to-read-someday', panelId: 'panel-someday', label: 'Want to Read Someday'  },
     ];
 
@@ -824,8 +824,6 @@
       hideLoading();
 
       var total = db['to-read-bought'].length + db['to-read-someday'].length;
-      var count = document.getElementById('book-count');
-      if (count) count.textContent = total === 0 ? '' : total + ' book' + (total === 1 ? '' : 's');
 
       // Bought & Ready panel
       var panelBought = document.getElementById('panel-bought');
@@ -833,8 +831,8 @@
         if (db['to-read-bought'].length === 0) {
           panelBought.innerHTML = emptyPanel('to-read-bought', 'No books queued up yet.');
         } else {
-          panelBought.innerHTML = '<div class="book-list">' +
-            db['to-read-bought'].map(function (b) { return renderBookRow(b, 'to-read-bought'); }).join('') +
+          panelBought.innerHTML = '<div class="book-grid">' +
+            db['to-read-bought'].map(function (b) { return renderBookCard(b, 'to-read-bought'); }).join('') +
             '</div>';
         }
       }
@@ -845,8 +843,8 @@
         if (db['to-read-someday'].length === 0) {
           panelSomeday.innerHTML = emptyPanel('to-read-someday', 'Your someday list is empty.');
         } else {
-          panelSomeday.innerHTML = '<div class="book-list">' +
-            db['to-read-someday'].map(function (b) { return renderBookRow(b, 'to-read-someday'); }).join('') +
+          panelSomeday.innerHTML = '<div class="book-grid">' +
+            db['to-read-someday'].map(function (b) { return renderBookCard(b, 'to-read-someday'); }).join('') +
             '</div>';
         }
       }
@@ -896,21 +894,19 @@
       hideLoading();
 
       var total = db['archive-finished'].length + db['archive-abandoned'].length;
-      var count = document.getElementById('book-count');
-      if (count) count.textContent = total === 0 ? '' : total + ' book' + (total === 1 ? '' : 's');
 
       var panelFinished = document.getElementById('panel-finished');
       if (panelFinished) {
         panelFinished.innerHTML = db['archive-finished'].length === 0
           ? emptyPanel(null, 'No finished books yet.')
-          : '<div class="book-list">' + db['archive-finished'].map(function (b) { return renderBookRow(b, 'archive-finished'); }).join('') + '</div>';
+          : '<div class="book-grid">' + db['archive-finished'].map(function (b) { return renderBookCard(b, 'archive-finished'); }).join('') + '</div>';
       }
 
       var panelAbandoned = document.getElementById('panel-abandoned');
       if (panelAbandoned) {
         panelAbandoned.innerHTML = db['archive-abandoned'].length === 0
           ? emptyPanel(null, 'Nothing abandoned \u2014 impressive.')
-          : '<div class="book-list">' + db['archive-abandoned'].map(function (b) { return renderBookRow(b, 'archive-abandoned'); }).join('') + '</div>';
+          : '<div class="book-grid">' + db['archive-abandoned'].map(function (b) { return renderBookCard(b, 'archive-abandoned'); }).join('') + '</div>';
       }
 
       switchTab(tabs, tabs[0].listId);
@@ -960,7 +956,7 @@
         return;
       }
 
-      document.title = book.title + ' \u2014 Bookshelf';
+      document.title = book.title + ' \u2014 Elliot\u2019s bookshelf';
       hideLoading();
       renderBookDetail(book, listId, db);
 
@@ -974,12 +970,6 @@
   function renderBookDetail(book, currentList, db) {
     var backPage  = LIST_PAGE[currentList] || 'index.html';
     var backLabel = LISTS[currentList] || 'Back';
-
-    var moveOptions = Object.keys(LISTS).filter(function (id) {
-      return id !== currentList;
-    }).map(function (id) {
-      return '<option value="' + id + '">' + escapeHtml(LISTS[id]) + '</option>';
-    }).join('');
 
     var content = document.getElementById('book-detail-content');
     if (!content) return;
@@ -996,50 +986,66 @@
           '<span class="book-detail-list-badge">' + escapeHtml(LISTS[currentList] || currentList) + '</span>',
           '<h1 class="book-detail-title">' + escapeHtml(book.title)  + '</h1>',
           '<p class="book-detail-author">'  + escapeHtml(book.author) + '</p>',
-          book.isbn ? '<p class="book-detail-isbn">ISBN ' + escapeHtml(book.isbn) + '</p>' : '',
-          '<div class="book-actions-group">',
-            '<label for="move-select">Move to a different shelf</label>',
-            '<select id="move-select" aria-label="Choose a shelf">' + moveOptions + '</select><br>',
+          // book.isbn ? '<p class="book-detail-isbn">ISBN ' + escapeHtml(book.isbn) + '</p>' : '',
+          '<div class="book-actions-group" id="move-action">',
             '<button class="btn btn-secondary" id="btn-move">Move book</button>',
           '</div>',
-          '<hr class="book-detail-divider">',
-          '<button class="btn btn-danger" id="btn-remove">Remove from shelf</button>',
         '</div>',
       '</div>',
     ].join('');
 
     document.getElementById('btn-move').addEventListener('click', function () {
-      var targetList = document.getElementById('move-select').value;
-      var btn = document.getElementById('btn-move');
-      btn.disabled    = true;
-      btn.textContent = 'Moving\u2026';
+      var moveOptions = Object.keys(LISTS).filter(function (id) {
+        return id !== currentList;
+      }).map(function (id) {
+        return '<option value="' + id + '">' + escapeHtml(LISTS[id]) + '</option>';
+      }).join('');
 
-      moveBook(book.id, currentList, targetList).then(function () {
-        showToast('Moved to ' + LISTS[targetList] + '.', 'success');
-        setTimeout(function () { location.replace(LIST_PAGE[targetList] || 'index.html'); }, 500);
-      }).catch(function (err) {
-        console.error(err);
-        btn.disabled    = false;
-        btn.textContent = 'Move book';
-        showToast('Move failed. Please try again.', 'error');
+      var action = document.getElementById('move-action');
+      action.innerHTML = [
+        '<select id="move-select" aria-label="Choose a shelf">',
+          moveOptions,
+          '<option disabled>\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</option>',
+          '<option value="__remove__">Remove book entirely</option>',
+        '</select>',
+        '<div class="move-action-btns">',
+          '<button class="btn btn-primary" id="btn-confirm">Confirm</button>',
+          '<button class="btn btn-ghost" id="btn-cancel">Cancel</button>',
+        '</div>',
+      ].join('');
+
+      document.getElementById('btn-cancel').addEventListener('click', function () {
+        renderBookDetail(book, currentList, db);
       });
-    });
 
-    document.getElementById('btn-remove').addEventListener('click', function () {
-      if (!confirm('Remove \u201c' + book.title + '\u201d from your shelf? This cannot be undone.')) return;
+      document.getElementById('btn-confirm').addEventListener('click', function () {
+        var select = document.getElementById('move-select');
+        var target = select.value;
+        var btn    = document.getElementById('btn-confirm');
+        btn.disabled    = true;
+        btn.textContent = 'Saving\u2026';
 
-      var btn = document.getElementById('btn-remove');
-      btn.disabled    = true;
-      btn.textContent = 'Removing\u2026';
-
-      removeBook(book.id, currentList).then(function () {
-        showToast('Book removed.', 'default');
-        setTimeout(function () { location.replace(backPage); }, 400);
-      }).catch(function (err) {
-        console.error(err);
-        btn.disabled    = false;
-        btn.textContent = 'Remove from shelf';
-        showToast('Remove failed. Please try again.', 'error');
+        if (target === '__remove__') {
+          removeBook(book.id, currentList).then(function () {
+            showToast('Book removed.', 'default');
+            setTimeout(function () { location.replace(backPage); }, 400);
+          }).catch(function (err) {
+            console.error(err);
+            btn.disabled    = false;
+            btn.textContent = 'Confirm';
+            showToast('Remove failed. Please try again.', 'error');
+          });
+        } else {
+          moveBook(book.id, currentList, target).then(function () {
+            showToast('Moved to ' + LISTS[target] + '.', 'success');
+            setTimeout(function () { location.replace(LIST_PAGE[target] || 'index.html'); }, 500);
+          }).catch(function (err) {
+            console.error(err);
+            btn.disabled    = false;
+            btn.textContent = 'Confirm';
+            showToast('Move failed. Please try again.', 'error');
+          });
+        }
       });
     });
   }
