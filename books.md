@@ -40,6 +40,12 @@
 - cover: covers/wuthering-heights.jpg
 - isbn: 9783458141068
 
+### Moonbound
+- id: 1780857217527
+- author: Robin Sloan
+- cover: https://covers.openlibrary.org/b/id/14633560-M.jpg
+- isbn: 0374610614
+
 ## to-read-someday
 
 ### Careless People
