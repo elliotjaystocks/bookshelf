@@ -701,6 +701,9 @@
   // SHARED NAV SETUP
   // =============================================================
 
+  var ICON_HAMBURGER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+  var ICON_CLOSE_MENU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>';
+
   function initNav(defaultSearchList) {
     var btnSearch   = document.getElementById('btn-search');
     var btnSettings = document.getElementById('btn-settings');
@@ -717,6 +720,73 @@
         openSettingsModal(false);
       });
     }
+
+    var btnMenu = document.getElementById('btn-menu');
+    if (!btnMenu) return;
+    btnMenu.innerHTML = ICON_HAMBURGER;
+
+    var nav = btnMenu.closest('.site-nav');
+    var drawer = null;
+
+    function closeDrawer() {
+      if (drawer) { drawer.remove(); drawer = null; }
+      btnMenu.innerHTML = ICON_HAMBURGER;
+      btnMenu.setAttribute('aria-label', 'Open menu');
+      btnMenu.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', onOutsideClick);
+    }
+
+    function onOutsideClick(e) {
+      if (nav && !nav.contains(e.target)) closeDrawer();
+    }
+
+    btnMenu.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (drawer) { closeDrawer(); return; }
+
+      // Determine current page for aria-current
+      var page = location.pathname.split('/').pop() || 'index.html';
+
+      // Collect aria-current from each nav link in the hidden .nav-links list
+      var links = [
+        { href: 'index.html',   label: 'Reading'  },
+        { href: 'to-read.html', label: 'To Read'  },
+        { href: 'archive.html', label: 'Archive'  },
+      ];
+
+      var linksHtml = links.map(function (l) {
+        var current = (page === l.href || (page === '' && l.href === 'index.html')) ? ' aria-current="page"' : '';
+        return '<a href="' + l.href + '" class="nav-drawer-link"' + current + '>' + l.label + '</a>';
+      }).join('');
+
+      drawer = document.createElement('div');
+      drawer.className = 'nav-drawer';
+      drawer.setAttribute('role', 'menu');
+      drawer.innerHTML = [
+        linksHtml,
+        '<div class="nav-drawer-divider"></div>',
+        '<div class="nav-drawer-actions">',
+          '<button class="nav-icon-btn" id="drawer-btn-search" aria-label="Search for a book">' + ICON_SEARCH_NAV + '</button>',
+          '<button class="nav-icon-btn" id="drawer-btn-settings" aria-label="Settings">' + ICON_SETTINGS_NAV + '</button>',
+        '</div>',
+      ].join('');
+
+      nav.appendChild(drawer);
+      btnMenu.innerHTML = ICON_CLOSE_MENU;
+      btnMenu.setAttribute('aria-label', 'Close menu');
+      btnMenu.setAttribute('aria-expanded', 'true');
+
+      drawer.querySelector('#drawer-btn-search').addEventListener('click', function () {
+        closeDrawer();
+        openSearchModal(defaultSearchList || 'currently-reading');
+      });
+      drawer.querySelector('#drawer-btn-settings').addEventListener('click', function () {
+        closeDrawer();
+        openSettingsModal(false);
+      });
+
+      setTimeout(function () { document.addEventListener('click', onOutsideClick); }, 0);
+    });
   }
 
   // =============================================================
@@ -791,6 +861,14 @@
         }
       } else {
         if (grid) grid.innerHTML = books.map(function (b) { return renderBookCard(b, 'currently-reading'); }).join('');
+      }
+
+      var toReadBooks = db['to-read-bought'];
+      var toReadSection = document.getElementById('to-read-section');
+      var toReadGrid    = document.getElementById('to-read-grid');
+      if (toReadSection && toReadGrid && toReadBooks.length > 0) {
+        toReadGrid.innerHTML = toReadBooks.map(function (b) { return renderBookCard(b, 'to-read-bought'); }).join('');
+        toReadSection.hidden = false;
       }
     }).catch(function (err) {
       console.error(err);

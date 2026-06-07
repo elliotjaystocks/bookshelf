@@ -23,13 +23,13 @@
 ### Stories of Your Life and Others
 - id: 1780857167907
 - author: Ted Chiang
-- cover: https://covers.openlibrary.org/b/id/524046-M.jpg
+- cover: covers/stories-of-your-life.jpg
 - isbn: 1931520720
 
 ### Slewfoot
 - id: 1780858831637
 - author: Brom
-- cover: https://covers.openlibrary.org/b/id/11963844-M.jpg
+- cover: covers/slewfoot.jpg
 - isbn: 9781250621986
 
 ## to-read-bought
@@ -43,7 +43,7 @@
 ### Moonbound
 - id: 1780857217527
 - author: Robin Sloan
-- cover: https://covers.openlibrary.org/b/id/14633560-M.jpg
+- cover: covers/moonbound.jpg
 - isbn: 0374610614
 
 ## to-read-someday
@@ -65,7 +65,7 @@
 ### Exhalation
 - id: 1780857201764
 - author: Ted Chiang
-- cover: https://covers.openlibrary.org/b/id/8793546-M.jpg
+- cover: covers/exhalation.jpg
 - isbn: 9781101972083
 
 ### Universal Principles of Typography
