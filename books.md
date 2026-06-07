@@ -32,15 +32,15 @@
 - cover: covers/wuthering-heights.jpg
 - isbn: 9783458141068
 
-## to-read-bought
-
-## to-read-someday
-
 ### Careless People
 - id: 1780830315865
 - author: Sarah Wynn-Williams
 - cover: covers/careless-people.jpg
 - isbn: 1035065932
+
+## to-read-bought
+
+## to-read-someday
 
 ## archive-finished
 
