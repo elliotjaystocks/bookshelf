@@ -610,6 +610,7 @@
           '<div id="settings-feedback"></div>',
         '</div>',
         '<div class="modal-footer">',
+          !isRequired ? '<button class="btn btn-ghost" id="btn-settings-refresh" title="Clear the local cache and reload data from GitHub">Refresh data</button>' : '',
           !isRequired ? '<button class="btn btn-secondary" id="btn-settings-cancel">Cancel</button>' : '',
           '<button class="btn btn-primary" id="btn-settings-save">Save &amp; connect</button>',
         '</div>',
@@ -617,10 +618,15 @@
     ].join('');
 
     if (!isRequired) {
-      var closeBtn   = overlay.querySelector('.modal-close');
-      var cancelBtn  = overlay.querySelector('#btn-settings-cancel');
+      var closeBtn      = overlay.querySelector('.modal-close');
+      var cancelBtn     = overlay.querySelector('#btn-settings-cancel');
+      var refreshBtn    = overlay.querySelector('#btn-settings-refresh');
       if (closeBtn)  closeBtn.addEventListener('click', closeModal);
       if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+      if (refreshBtn) refreshBtn.addEventListener('click', function () {
+        sessionStorage.removeItem(SESSION_KEY);
+        location.reload();
+      });
     }
 
     overlay.querySelector('#btn-settings-save').addEventListener('click', function () {
