@@ -26,12 +26,6 @@
 - cover: covers/bowling-with-corpses.jpg
 - isbn: 1506745881
 
-### Careless People
-- id: 1780830315865
-- author: Sarah Wynn-Williams
-- cover: covers/careless-people.jpg
-- isbn: 1035065932
-
 ## to-read-bought
 
 ### Wuthering Heights
@@ -41,6 +35,12 @@
 - isbn: 9783458141068
 
 ## to-read-someday
+
+### Careless People
+- id: 1780830315865
+- author: Sarah Wynn-Williams
+- cover: covers/careless-people.jpg
+- isbn: 1035065932
 
 ## archive-finished
 
