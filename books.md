@@ -4,7 +4,7 @@
 
 ### Drunk on All Your Strange New Words
 - id: 1779445653225
-- author: Eddie Robson
+- author: Eddie Robson 
 - cover: covers/drunk-on-all.jpg
 - isbn: 1250807344
 
