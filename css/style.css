@@ -245,7 +245,7 @@ code {
 .container {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 var(--sp-8);
+  padding: 0 var(--sp-3);
 }
 
 /* ============================================================
