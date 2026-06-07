@@ -26,12 +26,6 @@
 - cover: covers/bowling-with-corpses.jpg
 - isbn: 1506745881
 
-### Wuthering Heights
-- id: 1779445996914
-- author: Emily Brontë
-- cover: covers/wuthering-heights.jpg
-- isbn: 9783458141068
-
 ### Careless People
 - id: 1780830315865
 - author: Sarah Wynn-Williams
@@ -45,6 +39,12 @@
 - isbn: 0593732545
 
 ## to-read-bought
+
+### Wuthering Heights
+- id: 1779445996914
+- author: Emily Brontë
+- cover: covers/wuthering-heights.jpg
+- isbn: 9783458141068
 
 ## to-read-someday
 
