@@ -8,12 +8,6 @@
 - cover: covers/upot.png
 - isbn: 9780760383384
 
-### Bowling with Corpses and Other Strange Tales from Lands Unknown
-- id: 1779445596722
-- author: Mike Mignola
-- cover: covers/bowling-with-corpses.jpg
-- isbn: 1506745881
-
 ### Drunk on All Your Strange New Words
 - id: 1779445653225
 - author: Eddie Robson
@@ -43,6 +37,12 @@
 - author: Craig Mod
 - cover: covers/tbot.jpg
 - isbn: 0593732545
+
+### Bowling with Corpses and Other Strange Tales from Lands Unknown
+- id: 1779445596722
+- author: Mike Mignola
+- cover: covers/bowling-with-corpses.jpg
+- isbn: 1506745881
 
 ## archive-abandoned
 
