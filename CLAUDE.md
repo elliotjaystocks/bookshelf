@@ -34,6 +34,8 @@ All four pages share one JS file (`js/app.js`) and one CSS file (`css/style.css`
 
 **`books.md` is the database.** Its structure must be preserved exactly — sections are `## <list-key>`, books are `### <title>`, fields are `- key: value` lines. The five valid list keys are: `currently-reading`, `to-read-bought`, `to-read-someday`, `archive-finished`, `archive-abandoned`.
 
+**Custom cover images** can be placed in the `covers/` directory and referenced in `books.md` as a relative path, e.g. `- cover: covers/my-book.jpg`. The app renders whatever URL or path is in the `cover:` field, so both Open Library URLs and local paths work interchangeably.
+
 **No credentials in code.** GitHub username, repo name, and PAT are entered by the user in a settings modal and stored in `localStorage` under the key `bookshelf_github_config`. Never hardcode these.
 
 ## Fonts
