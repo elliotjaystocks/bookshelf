@@ -4,7 +4,7 @@
 
 ### Drunk on All Your Strange New Words
 - id: 1779445653225
-- author: Eddie Robson 
+- author: Eddie Robson
 - cover: covers/drunk-on-all.jpg
 - isbn: 1250807344
 
@@ -46,13 +46,13 @@
 - cover: covers/moonbound.jpg
 - isbn: 0374610614
 
-## to-read-someday
-
 ### Careless People
 - id: 1780830315865
 - author: Sarah Wynn-Williams
 - cover: covers/careless-people.jpg
 - isbn: 1035065932
+
+## to-read-someday
 
 ## archive-finished
 
