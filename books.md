@@ -54,6 +54,12 @@
 
 ## to-read-someday
 
+### There Is No Antimemetics Division
+- id: 1786348767178
+- author: qntm
+- cover: https://covers.openlibrary.org/b/id/11457905-M.jpg
+- isbn: 0593983769
+
 ## archive-finished
 
 ### Things Become Other Things
