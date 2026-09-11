@@ -52,6 +52,12 @@
 - cover: covers/careless-people.jpg
 - isbn: 1035065932
 
+### Did I Ever Tell You This?
+- id: 1789162409093
+- author: Sam Neill
+- cover: https://covers.openlibrary.org/b/id/14609034-M.jpg
+- isbn: 140595745X
+
 ## to-read-someday
 
 ### There Is No Antimemetics Division
