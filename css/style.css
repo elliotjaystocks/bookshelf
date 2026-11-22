@@ -22,6 +22,9 @@
 
 [hidden] { display: none !important; }
 
+/* Editing controls only appear once a GitHub token is connected (see initNav) */
+body:not(.is-owner) [data-owner-only] { display: none; }
+
 /* --- Design tokens --- */
 :root {
   /* Brand palette */
@@ -58,14 +61,15 @@
   --serif-weight-heavy: 700;
   --font-mono:  monospace;
 
-  /* Type scale */
-  --text-xs:   0.6875rem;  /* 11px */
-  --text-sm:   0.8125rem;  /* 13px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg:   1.25rem;    /* 20px */
-  --text-xl:   1.75rem;    /* 28px */
-  --text-2xl:  2.5rem;     /* 40px */
-  --text-3xl:  3.125rem;   /* 50px */
+  /* Type scale: small steps are fixed; large steps scale fluidly
+     between a 22.5rem (360px) and 60rem (960px) viewport */
+  --text-xs:   0.6875rem;                                  /* 11px */
+  --text-sm:   0.8125rem;                                  /* 13px */
+  --text-base: 1rem;                                       /* 16px */
+  --text-lg:   1.25rem;                                    /* 20px */
+  --text-xl:   clamp(1.5rem, 1.35rem + 0.667vw, 1.75rem);  /* 24 → 28px */
+  --text-2xl:  clamp(1.75rem, 1.3rem + 2vw, 2.5rem);       /* 28 → 40px */
+  --text-3xl:  clamp(1.75rem, 0.94rem + 3.6vw, 3.125rem);  /* 28 → 50px */
 
   /* Spacing */
   --sp-1:  0.25rem;
@@ -80,22 +84,29 @@
   --sp-16: 4rem;
 
   /* Layout */
-  --nav-h:       60px;
-  --content-max: 960px;
+  --nav-h:       3.75rem;
+  --content-max: 60rem;
   --nav-max-w:   calc(var(--content-max) + var(--sp-8));
-  --modal-max-w: 540px;
+  --modal-max-w: 33.75rem;
+  --card-min:    8.75rem;   /* narrowest a book card gets in the grid */
   --radius-sm:   3px;
   --radius:      5px;
   --radius-lg:   10px;
   --radius-pill: 100px;
 
-  /* Shadows */
-  --shadow-card:  0 10px 28px rgba(0,0,0,0.1);
-  --shadow-cover: 0 8px 24px rgba(0,0,0,0.12);
-  --shadow-modal: 0 24px 60px rgba(0,0,0,0.2);
+  /* Shadows: stacked layers for soft, realistic depth */
+  --shadow-card:  0 1px 1px #0000000d, 0 2px 2px #0000000d, 0 4px 4px #0000000d,
+                  0 8px 8px #0000000d, 0 16px 16px #0000000d;
+  --shadow-cover: 0 1px 1px #00000014, 0 2px 2px #00000014, 0 4px 4px #00000014,
+                  0 8px 8px #00000014, 0 16px 16px #00000014, 0 32px 32px #00000014;
+  --shadow-modal: 0 24px 60px #00000033;
+
+  /* Tints on the dark nav */
+  --tint-hover:   #ffffff14;
+  --tint-active:  #ffffff0f;
 
   /* Overlays */
-  --overlay-bg: rgba(20,20,20,0.55);
+  --overlay-bg: #1414148c;
 
   /* Z-index scale */
   --z-nav:     100;
@@ -105,6 +116,7 @@
 
   /* Motion */
   --ease: 160ms ease;
+  --cover-tilt: rotate(-1.25deg);
 }
 
 /* --- Base --- */
@@ -120,6 +132,17 @@ body {
   background: var(--bg);
   min-height: 100vh;
   line-height: 1.55;
+  font-synthesis: none;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 img {
@@ -163,9 +186,9 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--sp-8);
+  padding: 0 var(--sp-4);
   z-index: var(--z-nav);
-  gap: var(--sp-8);
+  gap: var(--sp-4);
 }
 
 .nav-brand {
@@ -177,10 +200,11 @@ code {
   flex-shrink: 0;
 }
 
+/* Links and actions live in the hamburger drawer until there's room (see RESPONSIVE) */
 .nav-links {
-  display: flex;
+  display: none;
   align-items: center;
-  gap: var(--sp-5);
+  gap: var(--sp-3);
   list-style: none;
   flex: 1;
 }
@@ -207,7 +231,7 @@ code {
 }
 
 .nav-actions {
-  display: flex;
+  display: none;
   align-items: center;
   gap: var(--sp-1);
   flex-shrink: 0;
@@ -225,7 +249,7 @@ code {
 
 .nav-icon-btn:hover {
   color: var(--white);
-  background: rgba(255,255,255,0.08);
+  background: var(--tint-hover);
 }
 
 .nav-icon-btn svg {
@@ -234,7 +258,9 @@ code {
 }
 
 .nav-hamburger {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--mid-gray);
   padding: var(--sp-2);
   border-radius: var(--radius);
@@ -244,7 +270,7 @@ code {
 
 .nav-hamburger:hover {
   color: var(--white);
-  background: rgba(255,255,255,0.08);
+  background: var(--tint-hover);
 }
 
 .nav-hamburger svg {
@@ -268,6 +294,13 @@ code {
   z-index: var(--z-nav);
 }
 
+ul.nav-drawer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
 .nav-drawer-link {
   font-size: var(--text-xs);
   font-weight: 600;
@@ -286,12 +319,12 @@ code {
 }
 
 .nav-drawer-link[aria-current="page"] {
-  background: rgba(255,255,255,0.06);
+  background: var(--tint-active);
 }
 
 .nav-drawer-divider {
   height: 1px;
-  background: rgba(255,255,255,0.08);
+  background: var(--tint-hover);
   margin: var(--sp-2) 0;
 }
 
@@ -313,7 +346,7 @@ code {
 .container {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 var(--sp-3);
+  padding: 0 var(--sp-4);
 }
 
 /* ============================================================
@@ -353,7 +386,7 @@ code {
   font-weight: 600;
   font-family: var(--font-sans);
   border-radius: var(--radius);
-  transition: all var(--ease);
+  transition: background-color var(--ease), border-color var(--ease), color var(--ease);
   white-space: nowrap;
   cursor: pointer;
   border: 2px solid transparent;
@@ -417,8 +450,8 @@ code {
 
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: var(--sp-6);
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
+  gap: var(--sp-4);
 }
 
 .book-card {
@@ -435,20 +468,23 @@ code {
   transform: translateY(-3px);
 }
 
+/* Every cover gets the same 2:3 book shape, so the grid rows line up */
 .book-card-cover {
+  aspect-ratio: 2 / 3;
   background: var(--mid-gray);
   overflow: hidden;
 }
 
 .book-card-cover img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
 .book-card-placeholder {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -711,6 +747,12 @@ code {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
+  width: 100%;
+  font: inherit;
+  line-height: 1.4;
+  color: inherit;
+  text-align: left;
+  background: none;
   padding: var(--sp-3);
   border-radius: var(--radius);
   cursor: pointer;
@@ -718,7 +760,8 @@ code {
   transition: background var(--ease), border-color var(--ease);
 }
 
-.search-result:hover {
+.search-result:hover,
+.search-result:focus-visible {
   background: var(--bg);
   border-color: var(--border);
 }
@@ -743,6 +786,7 @@ code {
 }
 
 .search-result-title {
+  display: block;
   font-weight: 600;
   font-size: var(--text-sm);
   margin-bottom: 2px;
@@ -752,6 +796,7 @@ code {
 }
 
 .search-result-meta {
+  display: block;
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
@@ -832,6 +877,10 @@ code {
 .preview-author {
   font-size: var(--text-sm);
   color: var(--text-muted);
+}
+
+fieldset.list-options {
+  border: none;
 }
 
 .list-options-label {
@@ -958,17 +1007,19 @@ code {
 
 .book-detail {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 1fr;
   gap: var(--sp-10);
   margin-bottom: var(--sp-12);
   align-items: start;
 }
 
 .book-detail-cover {
+  max-width: 9.375rem;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--mid-gray);
   box-shadow: var(--shadow-cover);
+  transform: var(--cover-tilt);
 }
 
 .book-detail-cover img {
@@ -1042,7 +1093,7 @@ code {
 .book-actions-group select {
   display: block;
   width: 100%;
-  max-width: 300px;
+  max-width: 18.75rem;
   padding: var(--sp-2) var(--sp-3);
   font-size: var(--text-sm);
   font-family: var(--font-sans);
@@ -1139,55 +1190,134 @@ code {
 }
 
 /* ============================================================
+   ARCHIVE: FINISHED BOOKS BY YEAR
+   ============================================================ */
+
+.year-group + .year-group {
+  margin-top: var(--sp-10);
+}
+
+.year-heading {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: var(--serif-weight-base);
+  letter-spacing: var(--serif-tracking);
+  margin-bottom: var(--sp-5);
+}
+
+.year-count {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   BOOK DETAIL: DATES
+   ============================================================ */
+
+/* Dates sit tight under the author, taking over the gap before the actions */
+.book-detail-author:has(+ .book-detail-dates) {
+  margin-bottom: var(--sp-2);
+}
+
+.book-detail-dates {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--sp-8);
+}
+
+/* ============================================================
+   EDIT MODAL
+   ============================================================ */
+
+/* The form wraps body and footer, so it takes over the modal's column layout */
+form.modal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.edit-cover {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: flex-start;
+}
+
+.edit-cover .preview-cover {
+  aspect-ratio: 2 / 3;
+}
+
+.edit-cover .preview-cover img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.edit-cover-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+.field input[type="file"] {
+  padding: var(--sp-2);
+  font-size: var(--text-sm);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  column-gap: var(--sp-4);
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 
-@media (max-width: 600px) {
+/* Mobile first: the styles above are the small-screen layout */
+
+/* 600px: room for the nav links and icons, so the hamburger goes */
+@media (min-width: 37.5em) {
   .nav-links,
   .nav-actions {
-    display: none;
-  }
-
-  .nav-hamburger {
     display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  .site-nav {
-    padding: 0 var(--sp-4);
+  .nav-hamburger,
+  .nav-drawer {
+    display: none;
   }
 }
 
-@media (max-width: 680px) {
+/* 680px: roomier spacing, bigger cards, cover beside the book details */
+@media (min-width: 42.5em) {
+  :root {
+    --card-min: 10.625rem;
+  }
+
   .site-nav {
-    padding: 0 var(--sp-4);
-    gap: var(--sp-4);
+    padding: 0 var(--sp-8);
+    gap: var(--sp-8);
   }
 
   .nav-links {
-    gap: var(--sp-3);
+    gap: var(--sp-5);
   }
 
   .container {
-    padding: 0 var(--sp-4);
+    padding: 0 var(--sp-3);
   }
 
   .book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: var(--sp-4);
+    gap: var(--sp-6);
   }
 
   .book-detail {
-    grid-template-columns: 1fr;
+    grid-template-columns: 12.5rem 1fr;
   }
 
   .book-detail-cover {
-    max-width: 150px;
-  }
-
-  .page-title {
-    font-size: var(--text-xl);
+    max-width: none;
   }
 }
 

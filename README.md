@@ -58,7 +58,7 @@ The app needs a token so it can write to `books.md` on your behalf.
 ### 5. Connect the app to GitHub
 
 1. Open your app in the browser (use the GitHub Pages URL from step 3).
-2. The Settings modal will open automatically on first visit.
+2. Click the **settings** (gear) icon in the top bar. Until you connect, the app shows a read-only view of your shelf — which is also what everyone else sees.
 3. Enter your **GitHub username**, **repository name** (`bookshelf`), and the **token** you just copied.
 4. Click **Save & connect**. The app will verify your credentials and create `books.md` in the repo.
 5. You're ready to start adding books.
@@ -101,7 +101,9 @@ All your books live in `books.md` at the root of this repository. It's plain Mar
 ## archive-abandoned
 ```
 
-If you edit `books.md` manually, push the change via GitHub Desktop and then hard-refresh the app (Ctrl/Cmd + Shift + R) to clear the session cache and reload.
+When you're connected, each book's page has **Move book** and **Edit details** buttons. Editing lets you fix the title or author, set the dates you started and finished it, and upload a new cover (resized automatically and saved to `covers/`). The app also fills in those dates for you: a book gets a `started` date when it moves to *Currently reading*, and a `finished` or `abandoned` date when it moves to the archive.
+
+If you edit `books.md` manually, push the change via GitHub Desktop and reload the app; it checks GitHub for changes on every page load. You can add your own fields to a book (e.g. `- notes: …` or `- finished: 2026-11-01`) and the app will keep them when it saves.
 
 ---
 

@@ -2,9 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!--
+    Hello, view-source reader! This is a hand-built reading tracker:
+    plain HTML, hand-written CSS and a little vanilla JavaScript, with no
+    framework and no build step. The books themselves live in a Markdown
+    file, books.md, which the app reads and writes through the GitHub API.
+  -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elliot&#x2019;s bookshelf — Currently Reading</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="What Elliot Jay Stocks is reading, has read, and plans to read next.">
+  <meta name="theme-color" content="#F6F6F6">
+
+  <meta name="robots" content="noai, noimageai">
+  <meta name="CCBot" content="nofollow">
+  <meta name="tdm-reservation" content="1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Elliot&#8217;s bookshelf">
+  <meta property="og:description" content="What Elliot Jay Stocks is reading, has read, and plans to read next.">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -16,7 +37,7 @@
       <li><a href="archive.html">Archive</a></li>
     </ul>
     <div class="nav-actions">
-      <button class="nav-icon-btn" id="btn-search" aria-label="Search for a book"></button>
+      <button class="nav-icon-btn" id="btn-search" aria-label="Search for a book" data-owner-only></button>
       <button class="nav-icon-btn" id="btn-settings" aria-label="Settings"></button>
     </div>
     <button class="nav-hamburger" id="btn-menu" aria-label="Open menu" aria-expanded="false"></button>
@@ -29,7 +50,7 @@
         <div class="page-header-left">
           <h1 class="page-title">Currently Reading</h1>
         </div>
-        <button class="btn btn-primary" id="btn-add" aria-label="Add a book">
+        <button class="btn btn-primary" id="btn-add" aria-label="Add a book" data-owner-only>
           + Add book
         </button>
       </header>
